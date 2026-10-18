@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+<script>if('serviceWorker' in navigator){var _had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',function(){if(_had&&!window._rl){window._rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){r.update()}).catch(function(){})})}</script>
 <style>
 
 :root{font-family:system-ui,-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:#1f2937;background:#f3f6fb;font-size:15px}
@@ -82,6 +82,7 @@ footer{font-size:.88rem;color:#64748b;text-align:center;padding:12px;line-height
 <nav class="menu">
   <a href="card.html"><div class="ico">💌</div><div><strong>감성 인사 카드</strong><span>고객·지인에게 보낼 계절 인사 카드 프롬프트</span></div><div class="arrow">›</div></a>
   <a href="profile.html"><div class="ico">🏆</div><div><strong>프로필 홍보 이미지</strong><span>카톡 프로필용 홍보 이미지 + 명함 합성</span></div><div class="arrow">›</div></a>
+  <a href="motion.html"><div class="ico">🌸</div><div><strong>움직이는 카드 (영상)</strong><span>완성 카드에 꽃잎·단풍·눈 효과 + 음악 → 영상 저장</span></div><div class="arrow">›</div></a>
 </nav>
 
 <section id="installBox">
