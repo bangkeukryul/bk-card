@@ -92,6 +92,45 @@ footer{font-size:.88rem;color:#64748b;text-align:center;padding:12px;line-height
 <button id="installBtn" class="copy-btn" type="button" style="display:none">홈 화면에 설치하기</button>
 <p id="installHelp" class="small">크롬: 오른쪽 위 <b>⋮</b> → <b>홈 화면에 추가</b> (또는 <b>앱 설치</b>)<br>아이폰 사파리: 아래 <b>공유</b> 버튼 → <b>홈 화면에 추가</b></p>
 </section>
+<section id="qrShare">
+<h2>🔗 주소 · QR코드 보내기</h2>
+<p class="small">카톡에 주소만 보내거나, QR코드 이미지를 보내 주세요.</p>
+<div style="display:flex;gap:8px;align-items:center;margin-top:10px">
+<input id="appUrl" type="text" readonly value="https://bangkeukryul.github.io/bk-card/" style="flex:1;font-weight:700;color:#174782">
+</div>
+<button type="button" class="copy-btn" id="copyUrlBtn">📋 주소 복사</button>
+<button type="button" class="secondary" id="copyMsgBtn" style="margin-top:8px">📋 카톡에 보낼 안내 문구 복사</button>
+<img id="qrImg" alt="BK 카드 도우미 QR코드" style="display:block;width:70%;max-width:320px;margin:14px auto 0;border:1px solid #dbe3ef;border-radius:12px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<button type="button" class="copy-btn" id="qrSave" style="margin:0">⬇ QR코드 크게 저장</button>
+<button type="button" class="kakao" id="qrShareBtn" style="margin:0">💬 QR 카톡 보내기</button>
+</div>
+<p class="small" id="qrMsg" style="font-weight:700"></p>
+</section>
+<script>
+(function(){
+const URL_='https://bangkeukryul.github.io/bk-card/',ROWS=["11111110010110010111001111111", "10000010101000011101101000001", "10111010011100101001001011101", "10111010011000110011001011101", "10111010101010110001001011101", "10000010001001111111001000001", "11111110101010101010101111111", "00000000000111000100100000000", "10101010010111101101100010010", "00001101101010001000011001001", "00111011010101000010100100111", "00010100101111111101101000010", "11000010111100111101111001011", "11110000100110000110111001001", "10100111111011000000011001011", "11110100100000000111100011010", "11110011110000011100011001011", "00101001111001001100101001101", "10011011100110101110011110011", "01110100001111100101000101010", "10011110100010101111111110000", "00000000110000101000100010111", "11111110011111000101101011011", "10000010011010001100100011001", "10111010111100011100111110011", "10111010001001000001100110111", "10111010100010000010100111001", "10000010010000001110111110010", "11111110111111011101110010011"];
+const MSG='📲 BK 카드 도우미 (무료)\n인사 카드 · 프로필 홍보 · 말씀 카드 · 이모티콘 · 움직이는 카드를 쉽게 만들어요.\n\n👉 '+URL_+'\n\n※ 카톡에서 열리면 오른쪽 ⋮ → ‘다른 브라우저로 열기’ → 크롬으로 열고, ⋮ → ‘홈 화면에 추가’ 하세요.';
+const F='"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+const msg=(t,c)=>{const m=document.getElementById('qrMsg');m.textContent=t;m.style.color=c||'#16a34a'};
+function draw(){const n=ROWS.length,W=1200,cell=Math.floor((W-200)/(n+8)),qs=cell*(n+8),H=qs+560,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ x.fillStyle='#fff';x.fillRect(0,0,W,H);x.fillStyle='#174782';x.fillRect(0,0,W,190);x.textAlign='center';x.textBaseline='top';x.fillStyle='#fff';x.font='800 84px '+F;x.fillText('BK 카드 도우미',W/2,45);
+ const qx=Math.floor((W-qs)/2),qy=230;x.fillStyle='#000';ROWS.forEach((r,yy)=>{for(let xx=0;xx<n;xx++)if(r[xx]==='1')x.fillRect(qx+(xx+4)*cell,qy+(yy+4)*cell,cell,cell)});
+ let y=qy+qs+20;[['휴대폰 카메라로 찍으면 바로 열려요','800 44px ','#174782'],['bangkeukryul.github.io/bk-card','700 40px ','#334155'],['크롬으로 열고 ‘홈 화면에 추가’ 하세요 · 무료','700 40px ','#64748b']].forEach(([t,f,col])=>{x.font=f+F;x.fillStyle=col;x.fillText(t,W/2,y);y+=78});
+ return c}
+let cv=null;const make=()=>{cv=draw();document.getElementById('qrImg').src=cv.toDataURL('image/png')};
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else setTimeout(make,300);
+async function copy(t,ok){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);msg(ok);return}}catch(e){}
+ const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');msg(ok)}catch(e){msg('주소를 길게 눌러 복사해 주세요.','#b45309')}a.remove()}
+document.getElementById('copyUrlBtn').addEventListener('click',()=>copy(URL_,'✅ 주소를 복사했어요. 카톡 대화창에 길게 눌러 붙여넣으세요.'));
+document.getElementById('copyMsgBtn').addEventListener('click',()=>copy(MSG,'✅ 안내 문구를 복사했어요. 카톡 대화창에 붙여넣으세요.'));
+const blob=()=>new Promise(r=>{if(!cv)make();cv.toBlob(r,'image/png')});
+document.getElementById('qrSave').addEventListener('click',async()=>{const b=await blob(),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='BK카드도우미_QR코드.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);msg('✅ QR코드를 저장했어요. 갤러리(또는 다운로드)에서 볼 수 있어요.')});
+document.getElementById('qrShareBtn').addEventListener('click',async()=>{const f=new File([await blob()],'BK카드도우미_QR코드.png',{type:'image/png'});
+ if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]})}catch(e){}}else msg('이 휴대폰은 바로 보내기를 지원하지 않아요. 저장한 뒤 카톡에서 사진으로 보내세요.','#b45309')});
+})();
+</script>
+
 <section id="guideSec">
 <h2>🤝 다른 분께 공유하기</h2>
 <p class="small">이 안내 이미지를 카톡으로 보내면, 받은 분이 QR을 찍어 바로 설치할 수 있어요.</p>
@@ -160,11 +199,27 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else set
 })();
 </script>
 
-<details id="adminBox" style="margin-top:16px;background:#fff;border:1px solid #dce3ee;border-radius:16px;padding:12px 16px">
+<details id="adminBox" style="display:none;margin-top:16px;background:#fff;border:1px solid #dce3ee;border-radius:16px;padding:12px 16px">
 <summary style="font-weight:800;color:#475569;cursor:pointer">🛠 관리자 메뉴 (만든 사람용 · 백업)</summary>
 <p class="small" style="margin-top:10px">지금 사이트에 올라가 있는 <b>파일 전체(9개)</b>를 날짜가 붙은 압축파일 하나로 휴대폰에 저장해요. <b>새 파일을 올리기 전에 꼭 한 번</b> 눌러 두세요.</p>
+<div style="border:1px solid #c7d7ee;background:#f8fbff;border-radius:12px;padding:10px 12px;margin:10px 0">
+<b style="color:#174782">🔗 관리용 주소</b>
+<div class="small" style="margin-top:6px;line-height:1.7">
+① 파일 올리기: <b>github.com/bangkeukryul/bk-card/upload/main</b><br>
+② 저장소(파일 목록·변경 기록): <b>github.com/bangkeukryul/bk-card</b><br>
+③ 관리자 메뉴 켜기: <b>bangkeukryul.github.io/bk-card/?bkadmin</b><br>
+④ 앱 주소(공유용): <b>bangkeukryul.github.io/bk-card</b>
+</div>
+<button type="button" class="copy-btn" id="copyAdminAll">📋 관리용 주소 전체 복사 (카톡 ‘나와의 채팅’에 저장)</button>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<button type="button" class="secondary" id="copyUpload" style="margin:0">📋 ① 올리기 주소만 복사</button>
+<a href="https://github.com/bangkeukryul/bk-card/upload/main" target="_blank" rel="noopener" class="secondary" style="display:flex;align-items:center;justify-content:center;text-decoration:none;border-radius:11px;font-weight:750;background:#e8eef7;color:#174782;padding:10px">↗ 올리기 화면 열기</a>
+</div>
+<p class="small" id="adminCopyMsg" style="font-weight:700"></p>
+</div>
 <button type="button" class="copy-btn" id="backupBtn">💾 지금 버전 백업하기</button>
 <p class="small" id="backupMsg" style="font-weight:700"></p>
+<button type="button" class="secondary" id="adminOff" style="margin-top:8px">🙈 이 휴대폰에서 관리자 메뉴 숨기기</button>
 <div class="tip" style="margin-top:10px">
 <b>📁 어디에 저장되나요?</b><br>휴대폰 <b>내 파일 → 다운로드</b> 폴더에 <b>BK카드_백업_날짜_시간.zip</b> 이름으로 저장돼요.<br>
 휴대폰을 잃어버릴 때를 대비해 가끔 <b>카톡 ‘나와의 채팅’</b>이나 <b>구글 드라이브</b>에도 올려 두면 더 안전해요.<br><br>
@@ -179,6 +234,17 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else set
 </details>
 <script>
 (function(){
+// 관리자 메뉴: ?bkadmin 으로 한 번 들어온 휴대폰에서만 보이기
+const KEY='bkAdmin';let on=false;
+try{const q=location.search;if(/[?&]bkadmin=off\b/.test(q))localStorage.removeItem(KEY);else if(/[?&]bkadmin\b/.test(q))localStorage.setItem(KEY,'1');on=localStorage.getItem(KEY)==='1'}catch(e){on=/[?&]bkadmin\b/.test(location.search)}
+if(on){const b=document.getElementById('adminBox');b.style.display='block';if(/[?&]bkadmin\b/.test(location.search))b.open=true}
+const ADMIN_TXT='🛠 BK 카드 도우미 관리용 주소\n\n① 파일 올리기 (업데이트)\nhttps://github.com/bangkeukryul/bk-card/upload/main\n\n② 저장소 (파일 목록·변경 기록)\nhttps://github.com/bangkeukryul/bk-card\n\n③ 관리자 메뉴 켜기 (내 휴대폰 전용, 남에게 알려 주지 않기)\nhttps://bangkeukryul.github.io/bk-card/?bkadmin\n\n④ 앱 주소 (다른 분께 공유용)\nhttps://bangkeukryul.github.io/bk-card/\n\n※ 업데이트 순서: 앱 관리자 메뉴에서 백업 → ①에서 새 파일 올리기 → Commit changes → 1~2분 뒤 앱 두 번 열기';
+async function acopy(t,ok){const m=document.getElementById('adminCopyMsg');
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);m.textContent=ok;m.style.color='#16a34a';return}}catch(e){}
+ const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');m.textContent=ok;m.style.color='#16a34a'}catch(e){m.textContent='복사가 안 되면 주소를 길게 눌러 복사해 주세요.';m.style.color='#b45309'}a.remove()}
+document.getElementById('copyAdminAll').addEventListener('click',()=>acopy(ADMIN_TXT,'✅ 복사했어요. 카톡 ‘나와의 채팅’에 길게 눌러 붙여넣고 보내 두세요.'));
+document.getElementById('copyUpload').addEventListener('click',()=>acopy('https://github.com/bangkeukryul/bk-card/upload/main','✅ 올리기 주소를 복사했어요.'));
+document.getElementById('adminOff').addEventListener('click',()=>{try{localStorage.removeItem(KEY)}catch(e){}document.getElementById('adminBox').style.display='none'});
 const FILES=['index.html','card.html','profile.html','faith.html','emoji.html','motion.html','manifest.json','sw.js','icon.png'];
 const T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=T[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
