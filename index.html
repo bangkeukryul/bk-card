@@ -160,6 +160,54 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else set
 })();
 </script>
 
+<details id="adminBox" style="margin-top:16px;background:#fff;border:1px solid #dce3ee;border-radius:16px;padding:12px 16px">
+<summary style="font-weight:800;color:#475569;cursor:pointer">🛠 관리자 메뉴 (만든 사람용 · 백업)</summary>
+<p class="small" style="margin-top:10px">지금 사이트에 올라가 있는 <b>파일 전체(9개)</b>를 날짜가 붙은 압축파일 하나로 휴대폰에 저장해요. <b>새 파일을 올리기 전에 꼭 한 번</b> 눌러 두세요.</p>
+<button type="button" class="copy-btn" id="backupBtn">💾 지금 버전 백업하기</button>
+<p class="small" id="backupMsg" style="font-weight:700"></p>
+<div class="tip" style="margin-top:10px">
+<b>📁 어디에 저장되나요?</b><br>휴대폰 <b>내 파일 → 다운로드</b> 폴더에 <b>BK카드_백업_날짜_시간.zip</b> 이름으로 저장돼요.<br>
+휴대폰을 잃어버릴 때를 대비해 가끔 <b>카톡 ‘나와의 채팅’</b>이나 <b>구글 드라이브</b>에도 올려 두면 더 안전해요.<br><br>
+<b>🚑 업데이트 후 문제가 생기면 (되돌리기)</b>
+<ol style="margin:6px 0 0 18px;padding:0">
+<li><b>내 파일 → 다운로드</b>에서 문제가 생기기 전 날짜의 백업 zip을 <b>길게 누르기</b> → <b>압축 풀기</b> → <b>추출</b>.</li>
+<li>같은 이름의 폴더가 생기면 그 안에 파일 9개가 들어 있어요.</li>
+<li><b>github.com/bangkeukryul/bk-card/upload/main</b> 접속 → <b>choose your files</b> → 그 폴더로 들어가 <b>파일 9개를 모두 선택</b> → <b>Commit changes</b>.</li>
+<li>1~2분 뒤 앱을 닫았다가 <b>두 번</b> 열면 예전 버전으로 돌아와 있어요.</li>
+</ol>
+</div>
+</details>
+<script>
+(function(){
+const FILES=['index.html','card.html','profile.html','faith.html','emoji.html','motion.html','manifest.json','sw.js','icon.png'];
+const T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=T[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+function makeZip(files){
+ const enc=new TextEncoder(),parts=[],cen=[];let off=0;const now=new Date(),dt=((now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1)),dd=(((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate());
+ const h=n=>{const b=new Uint8Array(n);return{b,v:new DataView(b.buffer)}};
+ files.forEach(f=>{const nm=enc.encode(f.name),crc=crc32(f.data),sz=f.data.length;
+  const L=h(30);L.v.setUint32(0,0x04034b50,true);L.v.setUint16(4,20,true);L.v.setUint16(6,0x0800,true);L.v.setUint16(10,dt,true);L.v.setUint16(12,dd,true);L.v.setUint32(14,crc,true);L.v.setUint32(18,sz,true);L.v.setUint32(22,sz,true);L.v.setUint16(26,nm.length,true);
+  parts.push(L.b,nm,f.data);
+  const C=h(46);C.v.setUint32(0,0x02014b50,true);C.v.setUint16(4,20,true);C.v.setUint16(6,20,true);C.v.setUint16(8,0x0800,true);C.v.setUint16(12,dt,true);C.v.setUint16(14,dd,true);C.v.setUint32(16,crc,true);C.v.setUint32(20,sz,true);C.v.setUint32(24,sz,true);C.v.setUint16(28,nm.length,true);C.v.setUint32(42,off,true);
+  cen.push(C.b,nm);off+=30+nm.length+sz});
+ const cl=cen.reduce((a,b)=>a+b.length,0),E=h(22);E.v.setUint32(0,0x06054b50,true);E.v.setUint16(8,files.length,true);E.v.setUint16(10,files.length,true);E.v.setUint32(12,cl,true);E.v.setUint32(16,off,true);
+ return new Blob([...parts,...cen,E.b],{type:'application/zip'})}
+const msg=(t,c)=>{const m=document.getElementById('backupMsg');m.textContent=t;m.style.color=c||'#174782'};
+document.getElementById('backupBtn').addEventListener('click',async()=>{
+ const d=new Date(),p=n=>String(n).padStart(2,'0'),ds=`${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`;
+ msg('사이트에서 파일을 받는 중…');const out=[];
+ try{
+  for(const f of FILES){const r=await fetch(f+'?backup='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(f+' ('+r.status+')');out.push({name:f,data:new Uint8Array(await r.arrayBuffer())})}
+ }catch(e){msg('⚠️ 백업 실패: '+e.message+' — 인터넷 연결을 확인하고 다시 눌러 주세요.','#dc2626');return}
+ const note=`BK 카드 도우미 백업\n백업한 때: ${d.toLocaleString('ko-KR')}\n\n[되돌리는 방법]\n1. 이 zip을 압축 풀기\n2. github.com/bangkeukryul/bk-card/upload/main 접속\n3. choose your files → 아래 파일 9개 모두 선택 → Commit changes\n4. 1~2분 뒤 앱을 닫았다가 두 번 열기\n\n파일: ${FILES.join(', ')}\n(이 안내 파일은 올리지 않아도 돼요)\n`;
+ out.push({name:'백업안내.txt',data:new TextEncoder().encode(note)});
+ const blob=makeZip(out),name=`BK카드_백업_${ds}.zip`,u=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);
+ msg(`✅ 백업 완료! 내 파일 → 다운로드에 “${name}” (${Math.round(blob.size/1024)}KB)로 저장했어요.`,'#16a34a');
+});
+})();
+</script>
+
 <footer>BK Agent · 비케이</footer>
 </main>
 <script>
