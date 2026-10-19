@@ -1,7 +1,7 @@
 {
- "name": "BK 카드 도우미",
- "short_name": "BK카드",
- "description": "감성 인사 카드 · 프로필 홍보 이미지 프롬프트 생성기",
+ "name": "BK톡톡",
+ "short_name": "BK톡톡",
+ "description": "인사 카드 · 홍보 이미지 · 이모티콘 만들기",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
