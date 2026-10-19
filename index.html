@@ -244,6 +244,13 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else set
 const KEY='bkAdmin';let on=false;
 try{const q=location.search;if(/[?&]bkadmin=off\b/.test(q))localStorage.removeItem(KEY);else if(/[?&]bkadmin\b/.test(q))localStorage.setItem(KEY,'1');on=localStorage.getItem(KEY)==='1'}catch(e){on=/[?&]bkadmin\b/.test(location.search)}
 if(on){const b=document.getElementById('adminBox');b.style.display='block';if(/[?&]bkadmin\b/.test(location.search))b.open=true}
+// 숨은 방법: 맨 아래 ‘BK Agent · 비케이’를 3초 안에 7번 누르면 켜기/끄기
+(function(){let n=0,t=0;
+ document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('footer'))return;const now=Date.now();if(now-t>3000)n=0;t=now;n++;
+  if(n>=7){n=0;const b=document.getElementById('adminBox'),show=b.style.display==='none';
+   try{show?localStorage.setItem(KEY,'1'):localStorage.removeItem(KEY)}catch(e){}
+   b.style.display=show?'block':'none';if(show){b.open=true;b.scrollIntoView({behavior:'smooth'})}
+   alert(show?'🛠 관리자 메뉴를 켰어요. (이 휴대폰에서만 보여요)':'관리자 메뉴를 숨겼어요.')}});})();
 const ADMIN_TXT='🛠 BK 카드 도우미 관리용 주소\n\n① 파일 올리기 (업데이트)\nhttps://github.com/bangkeukryul/bk-card/upload/main\n\n② 저장소 (파일 목록·변경 기록)\nhttps://github.com/bangkeukryul/bk-card\n\n③ 관리자 메뉴 켜기 (내 휴대폰 전용, 남에게 알려 주지 않기)\nhttps://bangkeukryul.github.io/bk-card/?bkadmin\n\n④ 앱 주소 (다른 분께 공유용)\nhttps://bangkeukryul.github.io/bk-card/\n\n※ 업데이트 순서: 앱 관리자 메뉴에서 백업 → ①에서 새 파일 올리기 → Commit changes → 1~2분 뒤 앱 두 번 열기';
 async function acopy(t,ok){const m=document.getElementById('adminCopyMsg');
  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);m.textContent=ok;m.style.color='#16a34a';return}}catch(e){}
