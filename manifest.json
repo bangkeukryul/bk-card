@@ -1,7 +1,7 @@
 {
  "name": "BK톡톡",
  "short_name": "BK톡톡",
- "description": "인사 카드 · 홍보 이미지 · 이모티콘 만들기",
+ "description": "인사 카드 · 이벤트 카드 · 홍보 이미지 · 이모티콘 만들기",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
