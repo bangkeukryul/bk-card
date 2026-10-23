@@ -101,6 +101,7 @@ footer{font-size:.88rem;color:#64748b;text-align:center;padding:12px;line-height
 <!-- 새 프로그램은 class="adminOnly" style="display:none" + preTag 로 추가 (관리자만 보임). 공개할 때 class·style·preTag를 지운다. -->
 <nav class="menu">
   <a href="card.html"><div class="ico">💌</div><div><strong>감성 인사 카드</strong><span>고객·지인에게 보낼 계절 인사 카드 프롬프트</span></div><div class="arrow">›</div></a>
+  <a href="event.html" class="adminOnly" style="display:none"><div class="ico">🎉</div><div><strong>이벤트 카드 <em class="preTag">🛠 관리자 미리보기</em></strong><span>생일 · 크리스마스 · 새해 · 결혼 · 개업 등 특별한 날 축하 카드</span></div><div class="arrow">›</div></a>
   <a href="profile.html"><div class="ico">🏆</div><div><strong>프로필 홍보 이미지</strong><span>보험설계사용 · 가게·개인 홍보(가게 광고·잡지 표지 등)</span></div><div class="arrow">›</div></a>
   <a href="faith.html"><div class="ico">📖</div><div><strong>말씀·법문 카드</strong><span>성경 말씀·불교 경전 구절로 만드는 카드 프롬프트</span></div><div class="arrow">›</div></a>
   <a href="emoji.html"><div class="ico">😊</div><div><strong>나만의 이모티콘</strong><span>내 사진으로 이모티콘 만들기 · 자동 자르기 · 카톡 보내기</span></div><div class="arrow">›</div></a>
@@ -226,7 +227,7 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else set
 
 <details id="adminBox" style="display:none;margin-top:16px;background:#fff;border:1px solid #dce3ee;border-radius:16px;padding:12px 16px">
 <summary style="font-weight:800;color:#475569;cursor:pointer">🛠 관리자 메뉴 (만든 사람용 · 백업)</summary>
-<p class="small" style="margin-top:10px">지금 사이트에 올라가 있는 <b>파일 전체(10개)</b>를 날짜가 붙은 압축파일 하나로 휴대폰에 저장해요. <b>새 파일을 올리기 전에 꼭 한 번</b> 눌러 두세요.</p>
+<p class="small" style="margin-top:10px">지금 사이트에 올라가 있는 <b>파일 전체(11개)</b>를 날짜가 붙은 압축파일 하나로 휴대폰에 저장해요. <b>새 파일을 올리기 전에 꼭 한 번</b> 눌러 두세요.</p>
 <div style="border:1px solid #c7d7ee;background:#f8fbff;border-radius:12px;padding:10px 12px;margin:10px 0">
 <b style="color:#174782">🔗 관리용 주소</b>
 <div class="small" style="margin-top:6px;line-height:1.7">
@@ -251,8 +252,8 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else set
 <b>🚑 업데이트 후 문제가 생기면 (되돌리기)</b>
 <ol style="margin:6px 0 0 18px;padding:0">
 <li><b>내 파일 → 다운로드</b>에서 문제가 생기기 전 날짜의 백업 zip을 <b>길게 누르기</b> → <b>압축 풀기</b> → <b>추출</b>.</li>
-<li>같은 이름의 폴더가 생기면 그 안에 파일 10개가 들어 있어요.</li>
-<li><b>github.com/bangkeukryul/bk-card/upload/main</b> 접속 → <b>choose your files</b> → 그 폴더로 들어가 <b>파일 10개를 모두 선택</b> → <b>Commit changes</b>.</li>
+<li>같은 이름의 폴더가 생기면 그 안에 파일 11개가 들어 있어요.</li>
+<li><b>github.com/bangkeukryul/bk-card/upload/main</b> 접속 → <b>choose your files</b> → 그 폴더로 들어가 <b>파일 11개를 모두 선택</b> → <b>Commit changes</b>.</li>
 <li>1~2분 뒤 앱을 닫았다가 <b>두 번</b> 열면 예전 버전으로 돌아와 있어요.</li>
 </ol>
 </div>
@@ -279,7 +280,7 @@ async function acopy(t,ok){const m=document.getElementById('adminCopyMsg');
 document.getElementById('copyAdminAll').addEventListener('click',()=>acopy(ADMIN_TXT,'✅ 복사했어요. 카톡 ‘나와의 채팅’에 길게 눌러 붙여넣고 보내 두세요.'));
 document.getElementById('copyUpload').addEventListener('click',()=>acopy('https://github.com/bangkeukryul/bk-card/upload/main','✅ 올리기 주소를 복사했어요.'));
 document.getElementById('adminOff').addEventListener('click',()=>{try{localStorage.removeItem(KEY)}catch(e){}document.getElementById('adminBox').style.display='none';adminVis(false)});
-const FILES=['index.html','card.html','profile.html','faith.html','emoji.html','motion.html','analysis.html','manifest.json','sw.js','icon.png'];
+const FILES=['index.html','card.html','profile.html','faith.html','emoji.html','motion.html','analysis.html','event.html','manifest.json','sw.js','icon.png'];
 const T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=T[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
 function makeZip(files){
@@ -299,7 +300,7 @@ document.getElementById('backupBtn').addEventListener('click',async()=>{
  try{
   for(const f of FILES){const r=await fetch(f+'?backup='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(f+' ('+r.status+')');out.push({name:f,data:new Uint8Array(await r.arrayBuffer())})}
  }catch(e){msg('⚠️ 백업 실패: '+e.message+' — 인터넷 연결을 확인하고 다시 눌러 주세요.','#dc2626');return}
- const note=`BK톡톡 백업\n백업한 때: ${d.toLocaleString('ko-KR')}\n\n[되돌리는 방법]\n1. 이 zip을 압축 풀기\n2. github.com/bangkeukryul/bk-card/upload/main 접속\n3. choose your files → 아래 파일 10개 모두 선택 → Commit changes\n4. 1~2분 뒤 앱을 닫았다가 두 번 열기\n\n파일: ${FILES.join(', ')}\n(이 안내 파일은 올리지 않아도 돼요)\n`;
+ const note=`BK톡톡 백업\n백업한 때: ${d.toLocaleString('ko-KR')}\n\n[되돌리는 방법]\n1. 이 zip을 압축 풀기\n2. github.com/bangkeukryul/bk-card/upload/main 접속\n3. choose your files → 아래 파일 11개 모두 선택 → Commit changes\n4. 1~2분 뒤 앱을 닫았다가 두 번 열기\n\n파일: ${FILES.join(', ')}\n(이 안내 파일은 올리지 않아도 돼요)\n`;
  out.push({name:'백업안내.txt',data:new TextEncoder().encode(note)});
  const blob=makeZip(out),name=`BK톡톡_백업_${ds}.zip`,u=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);
