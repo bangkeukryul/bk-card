@@ -160,12 +160,26 @@ document.getElementById('qrShareBtn').addEventListener('click',async()=>{const f
 <section id="guideSec">
 <h2>🤝 다른 분께 공유하기</h2>
 <p class="small">이 안내 이미지를 카톡으로 보내면, 받은 분이 QR을 찍어 바로 설치할 수 있어요.</p>
-<img id="guideImg" alt="사용법 안내 이미지" style="display:block;width:100%;border-radius:12px;border:1px solid #dbe3ef;margin-top:10px;background:#f8fafc;min-height:120px">
+<style>
+.gfold{margin-top:10px;border:1px solid #c7d7ee;border-radius:12px;background:#f8fbff;overflow:hidden}
+.gfold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 14px;font-weight:800;color:#174782;background:#eef4fd;-webkit-tap-highlight-color:transparent;user-select:none}
+.gfold>summary::-webkit-details-marker{display:none}
+.gfold>summary .gf-arrow{display:inline-block;transition:transform .2s}
+.gfold[open]>summary .gf-arrow{transform:rotate(180deg)}
+.gfold[open]>summary .gf-open{display:none}.gfold:not([open])>summary .gf-close{display:none}
+.gfold .gf-body{padding:10px}
+</style>
+<details class="gfold" id="guideFold">
+<summary><span class="gf-open">📲 설치 안내 이미지 펼쳐 보기</span><span class="gf-close">설치 안내 이미지 접기</span><span class="gf-arrow">▼</span></summary>
+<div class="gf-body">
+<img id="guideImg" alt="사용법 안내 이미지" style="display:block;width:100%;border-radius:12px;border:1px solid #dbe3ef;background:#f8fafc;min-height:120px">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
 <button type="button" class="copy-btn" id="guideSave" style="margin:0">⬇ 설치 안내 이미지 저장</button>
 <button type="button" class="kakao" id="guideShare" style="margin:0">💬 카톡으로 보내기</button>
 </div>
 <p class="small" id="guideMsg"></p>
+</div>
+</details>
 </section>
 <script>
 (function(){
@@ -221,7 +235,8 @@ function blob(){return new Promise(r=>cv.toBlob(r,'image/png'))}
 document.getElementById('guideSave').addEventListener('click',async()=>{if(!cv)make();const b=await blob(),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);document.getElementById('guideMsg').textContent='저장했어요. 갤러리(또는 다운로드 폴더)에서 볼 수 있어요. 이미지를 길게 눌러 저장해도 돼요.'});
 document.getElementById('guideShare').addEventListener('click',async()=>{if(!cv)make();const f=new File([await blob()],fn,{type:'image/png'});
  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]})}catch(e){}}else document.getElementById('guideMsg').textContent='이 휴대폰은 바로 보내기를 지원하지 않아요. 저장한 뒤 카톡에서 사진으로 보내세요.'});
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else setTimeout(make,300);
+const fold=document.getElementById('guideFold');
+fold.addEventListener('toggle',()=>{if(fold.open&&!cv){if(document.fonts&&document.fonts.ready)document.fonts.ready.then(make);else setTimeout(make,100)}});
 })();
 </script>
 
