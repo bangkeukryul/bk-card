@@ -243,6 +243,7 @@ fold.addEventListener('toggle',()=>{if(fold.open&&!cv){if(document.fonts&&docume
 
 <details id="adminBox" style="display:none;margin-top:16px;background:#fff;border:1px solid #dce3ee;border-radius:16px;padding:12px 16px">
 <summary style="font-weight:800;color:#475569;cursor:pointer">🛠 관리자 메뉴 (만든 사람용 · 백업)</summary>
+<p class="small" style="margin-top:10px">지금 버전: <b id="adminVer">…</b></p>
 <p class="small" style="margin-top:10px">지금 사이트에 올라가 있는 <b>파일 전체(11개)</b>를 날짜가 붙은 압축파일 하나로 휴대폰에 저장해요. <b>새 파일을 올리기 전에 꼭 한 번</b> 눌러 두세요.</p>
 <div style="border:1px solid #c7d7ee;background:#f8fbff;border-radius:12px;padding:10px 12px;margin:10px 0">
 <b style="color:#174782">🔗 관리용 주소</b>
@@ -281,13 +282,14 @@ const KEY='bkAdmin';let on=false;
 try{const q=location.search;if(/[?&]bkadmin=off\b/.test(q))localStorage.removeItem(KEY);else if(/[?&]bkadmin\b/.test(q))localStorage.setItem(KEY,'1');on=localStorage.getItem(KEY)==='1'}catch(e){on=/[?&]bkadmin\b/.test(location.search)}
 const adminVis=v=>document.querySelectorAll('.adminOnly').forEach(e=>e.style.display=v?'':'none');
 adminVis(on);
-if(on){const b=document.getElementById('adminBox');b.style.display='block';if(/[?&]bkadmin\b/.test(location.search))b.open=true}
+let verOk=false;function loadVer(){if(verOk)return;verOk=true;fetch('sw.js?v='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(t=>{const m=t.match(/C='([^']+)'/);document.getElementById('adminVer').textContent=m?m[1]:'알 수 없음'}).catch(()=>{verOk=false;document.getElementById('adminVer').textContent='확인 못 함 (인터넷 확인)'})}
+if(on){const b=document.getElementById('adminBox');b.style.display='block';loadVer();if(/[?&]bkadmin\b/.test(location.search))b.open=true}
 // 숨은 방법: 맨 아래 ‘BK Agent · 비케이’를 3초 안에 7번 누르면 켜기/끄기
 (function(){let n=0,t=0;
  document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('footer'))return;const now=Date.now();if(now-t>3000)n=0;t=now;n++;
   if(n>=7){n=0;const b=document.getElementById('adminBox'),show=b.style.display==='none';
    try{show?localStorage.setItem(KEY,'1'):localStorage.removeItem(KEY)}catch(e){}
-   b.style.display=show?'block':'none';adminVis(show);if(show){b.open=true;b.scrollIntoView({behavior:'smooth'})}
+   b.style.display=show?'block':'none';adminVis(show);if(show){loadVer();b.open=true;b.scrollIntoView({behavior:'smooth'})}
    alert(show?'🛠 관리자 메뉴를 켰어요. (이 휴대폰에서만 보여요)':'관리자 메뉴를 숨겼어요.')}});})();
 const ADMIN_TXT='🛠 BK톡톡 관리용 주소\n\n① 파일 올리기 (업데이트)\nhttps://github.com/bangkeukryul/bk-card/upload/main\n\n② 저장소 (파일 목록·변경 기록)\nhttps://github.com/bangkeukryul/bk-card\n\n③ 관리자 메뉴 켜기 (내 휴대폰 전용, 남에게 알려 주지 않기)\nhttps://bangkeukryul.github.io/bk-card/?bkadmin\n\n④ 앱 주소 (다른 분께 공유용)\nhttps://bangkeukryul.github.io/bk-card/\n\n※ 업데이트 순서: 앱 관리자 메뉴에서 백업 → ①에서 새 파일 올리기 → Commit changes → 1~2분 뒤 앱 두 번 열기';
 async function acopy(t,ok){const m=document.getElementById('adminCopyMsg');
@@ -316,7 +318,7 @@ document.getElementById('backupBtn').addEventListener('click',async()=>{
  try{
   for(const f of FILES){const r=await fetch(f+'?backup='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(f+' ('+r.status+')');out.push({name:f,data:new Uint8Array(await r.arrayBuffer())})}
  }catch(e){msg('⚠️ 백업 실패: '+e.message+' — 인터넷 연결을 확인하고 다시 눌러 주세요.','#dc2626');return}
- const note=`BK톡톡 백업\n백업한 때: ${d.toLocaleString('ko-KR')}\n\n[되돌리는 방법]\n1. 이 zip을 압축 풀기\n2. github.com/bangkeukryul/bk-card/upload/main 접속\n3. choose your files → 아래 파일 11개 모두 선택 → Commit changes\n4. 1~2분 뒤 앱을 닫았다가 두 번 열기\n\n파일: ${FILES.join(', ')}\n(이 안내 파일은 올리지 않아도 돼요)\n`;
+ const note=`BK톡톡 백업\n백업한 때: ${d.toLocaleString('ko-KR')}\n버전: ${document.getElementById('adminVer').textContent}\n\n[되돌리는 방법]\n1. 이 zip을 압축 풀기\n2. github.com/bangkeukryul/bk-card/upload/main 접속\n3. choose your files → 아래 파일 11개 모두 선택 → Commit changes\n4. 1~2분 뒤 앱을 닫았다가 두 번 열기\n\n파일: ${FILES.join(', ')}\n(이 안내 파일은 올리지 않아도 돼요)\n`;
  out.push({name:'백업안내.txt',data:new TextEncoder().encode(note)});
  const blob=makeZip(out),name=`BK톡톡_백업_${ds}.zip`,u=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);
