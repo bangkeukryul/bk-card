@@ -109,6 +109,7 @@ footer{font-size:.88rem;color:#64748b;text-align:center;padding:12px;line-height
   <a href="https://bangkeukryul.github.io/bk-shorts/" class="adminOnly" style="display:none"><div class="ico">🎬</div><div><strong>BK쇼츠 <em class="preTag">🛠 관리자 미리보기</em></strong><span>사진 여러 장 + 글귀 + 음악 → 틱톡·유튜브 쇼츠 영상 (따로 설치되는 가족 앱)</span></div><div class="arrow">›</div></a>
   <a href="https://bangkeukryul.github.io/bk-prom/" class="adminOnly" style="display:none"><div class="ico">🗂️</div><div><strong>BK프롬 <em class="preTag">🛠 관리자 미리보기</em></strong><span>자주 쓰는 AI 프롬프트 · 결과물 · 증명사진 · 로고 보관함 (따로 설치되는 가족 앱)</span></div><div class="arrow">›</div></a>
   <a href="moim.html" class="adminOnly" style="display:none"><div class="ico">📢</div><div><strong>모임공지 카드 <em class="preTag">🛠 관리자 미리보기</em></strong><span>동기회 · 정기모임 · 행사 안내 카드 + 카톡 글 (AI 없이 바로)</span></div><div class="arrow">›</div></a>
+  <a href="music.html" class="adminOnly" style="display:none"><div class="ico">🎵</div><div><strong>BK뮤직 <em class="preTag">🛠 관리자 미리보기</em></strong><span>수노(Suno) AI 노래 만들기 · 작사 요청서 + 스타일 태그 · 축가 · 응원가 · 부모님 노래</span></div><div class="arrow">›</div></a>
   <a href="analysis.html" class="adminOnly" style="display:none"><div class="ico">🛡️</div><div><strong>보장분석 도우미 <em class="preTag">🛠 관리자 미리보기</em></strong><span>보험증권·설계서 사진으로 보장 공백 정리 · 설계사 상담 참고용</span></div><div class="arrow">›</div></a>
 </nav>
 <section class="links"><h2>🔗 함께 보면 좋은 곳</h2>
@@ -300,7 +301,7 @@ async function acopy(t,ok){const m=document.getElementById('adminCopyMsg');
 document.getElementById('copyAdminAll').addEventListener('click',()=>acopy(ADMIN_TXT,'✅ 복사했어요. 카톡 ‘나와의 채팅’에 길게 눌러 붙여넣고 보내 두세요.'));
 document.getElementById('copyUpload').addEventListener('click',()=>acopy('https://github.com/bangkeukryul/bk-card/upload/main','✅ 올리기 주소를 복사했어요.'));
 document.getElementById('adminOff').addEventListener('click',()=>{try{localStorage.removeItem(KEY)}catch(e){}document.getElementById('adminBox').style.display='none';adminVis(false)});
-const FILES=['index.html','card.html','profile.html','faith.html','emoji.html','motion.html','analysis.html','event.html','moim.html','manifest.json','sw.js','icon.png'];
+const FILES=['index.html','card.html','profile.html','faith.html','emoji.html','motion.html','analysis.html','event.html','moim.html','music.html','manifest.json','sw.js','icon.png'];
 const T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=T[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
 function makeZip(files){
