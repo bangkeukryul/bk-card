@@ -1,5 +1,5 @@
-const C='bk-card-v83';
-const FILES=['./','index.html','card.html','profile.html','motion.html','faith.html','emoji.html','analysis.html','event.html','moim.html','music.html','manifest.json','icon.png'];
+const C='bk-card-v85';
+const FILES=['./','index.html','card.html','profile.html','motion.html','faith.html','emoji.html','analysis.html','event.html','moim.html','music.html','activate.html','fc.html','manifest.json','icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('bk-card-')&&k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
