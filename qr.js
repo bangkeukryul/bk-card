@@ -80,6 +80,7 @@ var APPS={
  'bk-card/moim':['모임공지 카드','동기회 · 정기모임 · 행사 안내'],
  'bk-card/music':['BK뮤직','AI로 나만의 노래 만들기'],
  'bk-card/analysis':['보장분석 도우미','보험증권으로 보장 공백 정리'],
+ 'bk-card/garyebu':['BK가계부','아이콘만 눌러 쉽게 쓰는 우리집 가계부'],
  'bk-shorts/index':['BK쇼츠','사진 + 글귀 + 음악 → 쇼츠 영상'],
  'bk-studio/index':['BK영상','대본 · 내 목소리로 쇼츠 영상 만들기']
 };
@@ -165,8 +166,13 @@ function place(){if(document.getElementById('bkQrBtn'))return;
   /* 맨 위 줄에 자리가 모자라 앱 이름이 잘리면, 버튼을 바로 아래 줄 오른쪽으로 옮김 */
   var hdr=top.closest('header')||top.parentNode,row=document.createElement('div');row.className='bkqr-row end';row.style.margin='-4px 0 10px';
   var fit=function(){top.insertBefore(btn,top.firstChild);if(row.parentNode)row.remove();
-   var h=hdr.querySelector('h1');if(h&&h.scrollWidth>h.clientWidth+1){var cs=getComputedStyle(hdr);row.style.padding='0 '+cs.paddingRight+' 0 '+cs.paddingLeft;row.appendChild(btn);hdr.parentNode.insertBefore(row,hdr.nextSibling)}};
-  fit();window.addEventListener('resize',fit);window.addEventListener('load',fit);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);return}
+   var h=hdr.querySelector('h1'),tight=hdr.scrollWidth>hdr.clientWidth+1||top.scrollWidth>top.clientWidth+1||(h&&(h.scrollWidth>h.clientWidth+1||h.getBoundingClientRect().width<40));
+   if(tight){var cs=getComputedStyle(hdr);row.style.padding='0 '+cs.paddingRight+' 0 '+cs.paddingLeft;row.appendChild(btn);hdr.parentNode.insertBefore(row,hdr.nextSibling)}};
+  var tq=0,later=function(){cancelAnimationFrame(tq);tq=requestAnimationFrame(fit)};
+  fit();window.addEventListener('resize',later);window.addEventListener('load',later);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(later);
+  /* '앱 설치' 버튼처럼 나중에 나타나는 버튼이 생기면 다시 자리 맞춤 */
+  try{new MutationObserver(later).observe(top,{attributes:true,attributeFilter:['hidden','style','class'],subtree:true})}catch(e){}
+  return}
  btn.className='bkqr-pill';
  var back=document.querySelector('main > a[href="./"]');
  if(back){var row=document.createElement('div');row.className='bkqr-row';back.parentNode.insertBefore(row,back);row.appendChild(back);row.appendChild(btn);return}  /* BK톡톡 프로그램 화면 */
