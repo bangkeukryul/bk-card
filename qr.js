@@ -80,6 +80,7 @@ var APPS={
  'bk-card/moim':['모임공지 카드','동기회 · 정기모임 · 행사 안내'],
  'bk-card/music':['BK뮤직','AI로 나만의 노래 만들기'],
  'bk-card/analysis':['보장분석 도우미','보험증권으로 보장 공백 정리'],
+ 'bk-card/today':['오늘의 인사 카드','날짜 맞춤 문구 · 효과 · 음악으로 만드는 인사 카드'],
  'bk-card/garyebu':['BK가계부','아이콘만 눌러 쉽게 쓰는 우리집 가계부'],
  'bk-shorts/index':['BK쇼츠','사진 + 글귀 + 음악 → 쇼츠 영상'],
  'bk-studio/index':['BK영상','대본 · 내 목소리로 쇼츠 영상 만들기']
