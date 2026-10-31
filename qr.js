@@ -182,3 +182,6 @@ function place(){if(document.getElementById('bkQrBtn'))return;
  btn.className='bkqr-pill bkqr-fixed';document.body.appendChild(btn)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',place);else place();
 })();
+
+/* 휴대폰 ◁(뒤로 가기) 확인창 · 쓰던 내용 자동 저장 — bkguard.js */
+(function(){if(window.BKGUARD||document.getElementById('bkGuardJs'))return;var s=document.createElement('script');s.id='bkGuardJs';s.src='bkguard.js';(document.head||document.documentElement).appendChild(s)})();
