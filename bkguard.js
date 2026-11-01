@@ -103,15 +103,15 @@
   function start() { setTimeout(offerRestore, 700); var c = C(); if (c.autoArm && c.autoArm()) arm(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 
-  // ───────── BK톡톡 인사 카드: AI가 만든 그림에 글씨 올리기 (관리자 미리보기) ─────────
+  // ───────── BK톡톡 인사 카드: AI가 만든 그림에 글씨 올리기 ─────────
   var ADMIN = ls('bkAdmin') === '1';
-  if (repo === 'bk-card' && ADMIN && /^(card|event|faith)$/.test(file)) {
+  if (repo === 'bk-card' && /^(card|event|faith)$/.test(file)) {
     var add = function () {
       if (document.getElementById('bkgImport')) return;
       var main = document.querySelector('main'); if (!main) return;
       var sec = document.createElement('section'); sec.id = 'bkgImport'; sec.setAttribute('data-nosave', '');
       sec.style.cssText = 'margin:18px 0;padding:16px;border-radius:18px;background:#fff;border:2px dashed #f2c14e;font-family:"Noto Sans KR",sans-serif';
-      sec.innerHTML = '<h2 style="margin:0 0 6px;font-size:1.15rem;color:#174782">✏️ 완성 그림에 글씨 올리기 · 고치기 <em style="font-style:normal;font-size:.75rem;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:99px">🛠 관리자 미리보기</em></h2>' +
+      sec.innerHTML = '<h2 style="margin:0 0 6px;font-size:1.15rem;color:#174782">✏️ 완성 그림에 글씨 올리기 · 고치기</h2>' +
         '<p style="margin:0 0 10px;color:#475569;font-size:.92rem;line-height:1.55">AI가 만들어 준 카드 그림을 고르면, 그 위에 <b>글씨 · 스티커 · 원형 사진 + 명함</b>을 손가락으로 옮기며 넣고 ✎로 고칠 수 있어요. 움직이는 효과 · 음악을 넣어 영상으로도 보낼 수 있어요.</p>' +
         '<label style="display:block;text-align:center;padding:15px;border-radius:14px;background:#174782;color:#fff;font-weight:800;cursor:pointer">🖼️ AI가 만든 그림 고르기<input type="file" accept="image/*" hidden></label>';
       var guide = Array.prototype.find.call(main.querySelectorAll('h2'), function (h) { return /사용법/.test(h.textContent); });
